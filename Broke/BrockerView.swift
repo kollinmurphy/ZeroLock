@@ -14,7 +14,7 @@ struct BrokerView: View {
     @EnvironmentObject private var appBlocker: AppBlocker
     @EnvironmentObject private var profileManager: ProfileManager
     @StateObject private var nfcReader = NFCReader()
-    private let tagPhrase = "brokenfc://broke"
+    private let tagPhrase = "zerolock://zerolock"
     
     @State private var showWrongTagAlert = false
     @State private var showCreateTagAlert = false
@@ -47,21 +47,21 @@ struct BrokerView: View {
             .navigationBarItems(trailing: createTagButton)
             .alert(isPresented: $showWrongTagAlert) {
                 Alert(
-                    title: Text("Not a Broker Tag"),
-                    message: Text("You can create a new Broker tag using the + button"),
+                    title: Text("Not a ZeroLock Tag"),
+                    message: Text("You can create a new ZeroLock tag using the + button"),
                     dismissButton: .default(Text("OK"))
                 )
             }
-            .alert("Create Broker Tag", isPresented: $showCreateTagAlert) {
+            .alert("Create ZeroLock Tag", isPresented: $showCreateTagAlert) {
                 Button("Create") { createBrokerTag() }
                 Button("Cancel", role: .cancel) { }
             } message: {
-                Text("Do you want to create a new Broker tag?")
+                Text("Do you want to create a new ZeroLock tag?")
             }
             .alert("Tag Creation", isPresented: $nfcWriteSuccess) {
                 Button("OK", role: .cancel) { }
             } message: {
-                Text(nfcWriteSuccess ? "Broker tag created successfully!" : "Failed to create Broker tag. Please try again.")
+                Text(nfcWriteSuccess ? "ZeroLock tag created successfully!" : "Failed to create ZeroLock tag. Please try again.")
             }
         }
         .animation(.spring(), value: isBlocking)

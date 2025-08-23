@@ -1,1 +1,3 @@
 *.xcuserdatad
+.venv
+.DS_Store

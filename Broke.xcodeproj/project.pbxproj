@@ -314,7 +314,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Broke/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Broke;
+				INFOPLIST_KEY_CFBundleDisplayName = ZeroLock;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC tag to read NDEF messages into the application";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -330,7 +330,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kollinmurphy.Broke;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kollinmurphy.zerolock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -355,7 +355,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Broke/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Broke;
+				INFOPLIST_KEY_CFBundleDisplayName = ZeroLock;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC tag to read NDEF messages into the application";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -371,7 +371,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kollinmurphy.Broke;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kollinmurphy.zerolock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
