@@ -163,7 +163,7 @@ class NFCReader: NSObject, ObservableObject, NFCNDEFReaderSessionDelegate {
                         return
                     }
                     
-                    let payload = NFCNDEFPayload.wellKnownTypeTextPayload(string: textToWrite, locale: Locale(identifier: "en"))!
+                    let payload = NFCNDEFPayload.wellKnownTypeURIPayload(string: textToWrite)!
                     let message = NFCNDEFMessage(records: [payload])
                     
                     tag.writeNDEF(message) { error in

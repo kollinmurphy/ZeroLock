@@ -34,6 +34,7 @@ struct ProfileFormView: View {
         var selection = FamilyActivitySelection()
         selection.applicationTokens = profile?.appTokens ?? []
         selection.categoryTokens = profile?.categoryTokens ?? []
+        selection.webDomainTokens = profile?.webDomainTokens ?? []
         _activitySelection = State(initialValue: selection)
     }
     
@@ -156,6 +157,7 @@ struct ProfileFormView: View {
                 name: profileName,
                 appTokens: activitySelection.applicationTokens,
                 categoryTokens: activitySelection.categoryTokens,
+                webDomainTokens: activitySelection.webDomainTokens,
                 icon: profileIcon
             )
         } else {
@@ -163,6 +165,7 @@ struct ProfileFormView: View {
                 name: profileName,
                 appTokens: activitySelection.applicationTokens,
                 categoryTokens: activitySelection.categoryTokens,
+                webDomainTokens: activitySelection.webDomainTokens,
                 icon: profileIcon
             )
             profileManager.addProfile(newProfile: newProfile)

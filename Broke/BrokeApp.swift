@@ -17,6 +17,9 @@ struct BrokeApp: App {
             BrokerView()
                 .environmentObject(appBlocker)
                 .environmentObject(profileManager)
+                .onOpenURL { url in
+                    appBlocker.toggleBlocking(for: profileManager.currentProfile)
+                }
         }
     }
 }

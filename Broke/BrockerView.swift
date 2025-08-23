@@ -14,7 +14,7 @@ struct BrokerView: View {
     @EnvironmentObject private var appBlocker: AppBlocker
     @EnvironmentObject private var profileManager: ProfileManager
     @StateObject private var nfcReader = NFCReader()
-    private let tagPhrase = "BROKE-IS-GREAT"
+    private let tagPhrase = "brokenfc://broke"
     
     @State private var showWrongTagAlert = false
     @State private var showCreateTagAlert = false
