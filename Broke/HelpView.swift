@@ -44,11 +44,10 @@ struct HelpView: View {
 
     private var headerSection: some View {
         HStack(spacing: 16) {
-            Image(systemName: "hand.raised.square.fill")
+            Image("GreenIcon")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 50, height: 50)
-                .foregroundColor(.blue)
+                .frame(width: 54, height: 54)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(AppConstants.appName)
