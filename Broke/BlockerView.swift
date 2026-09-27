@@ -32,6 +32,7 @@ struct BlockerView: View {
     @StateObject private var nfcReader = NFCReader()
     @AppStorage(AppConstants.isDemoModeKey) private var isDemoMode = false
     private let tagPhrase = AppConstants.tagPhrase
+    @Environment(\.colorScheme) private var colorScheme
     
     @State private var showWrongTagAlert = false
     @State private var showCreateTagAlert = false
@@ -188,6 +189,7 @@ struct BlockerView: View {
                         Image("TransparentIcon")
                             .resizable()
                             .scaledToFit()
+                            .colorInvert(if: colorScheme == .light)
                             .frame(width: 106, height: 106)
                             .shadow(color: (isBlocking ? Color.red : Color.green).opacity(isPulsing ? 0.5 : 0.2), radius: isPulsing ? 12 : 4, x: 0, y: 4)
                     }
@@ -300,12 +302,18 @@ struct BlockerView: View {
         }
     }
     
+    private func createZeroLockTag() {
+        nfcReader.write(tagPhrase) { success in
+            nfcWriteSuccess = success
+        }
+    }
+    
     private var helpButton: some View {
         Button(action: {
             showHelpSheet = true
         }) {
-            Image(systemName: "questionmark.circle.fill")
-                .font(.system(size: 20))
+            Image(systemName: "questionmark.circle")
+                .font(.system(size: 18, weight: .medium))
                 .foregroundColor(.primary)
         }
     }
@@ -314,17 +322,26 @@ struct BlockerView: View {
         Button(action: {
             showCreateTagAlert = true
         }) {
-            Image(systemName: "plus.viewfinder")
-                .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(isBlocking ? .red : .green)
-        }
-        .disabled(!NFCNDEFReaderSession.readingAvailable)
-    }
-    
-    private func createZeroLockTag() {
-        nfcReader.write(tagPhrase) { success in
-            nfcWriteSuccess = !success
-            showCreateTagAlert = false
+            Image(systemName: "plus.circle")
+                .font(.system(size: 18, weight: .medium))
+                .foregroundColor(.primary)
         }
     }
+}
+
+private extension View {
+    @ViewBuilder
+    func colorInvert(if condition: Bool) -> some View {
+        if condition {
+            self.colorInvert()
+        } else {
+            self
+        }
+    }
+}
+
+#Preview {
+    BlockerView()
+        .environmentObject(AppBlocker())
+        .environmentObject(ProfileManager())
 }
