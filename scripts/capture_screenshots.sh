@@ -21,9 +21,7 @@ mkdir -p "$OUTPUT_DIR"
 # Simulators to capture screenshots for
 DEVICES=(
     "iPhone 17 Pro Max"
-    "iPhone 17 Pro"
     "iPad Pro 13-inch (M5)"
-    "iPad mini (A17 Pro)"
 )
 
 for DEVICE in "${DEVICES[@]}"; do

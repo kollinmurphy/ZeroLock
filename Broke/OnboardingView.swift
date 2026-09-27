@@ -8,6 +8,7 @@ import SwiftUI
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
     @State private var currentPage = 0
 
     private let totalPages = 3
@@ -27,6 +28,10 @@ struct OnboardingView: View {
                 }
                 .tabViewStyle(.page(indexDisplayMode: .always))
                 .indexViewStyle(.page(backgroundDisplayMode: .always))
+                .tint(colorScheme == .light ? .black : .white)
+                .onAppear {
+                    UIPageControl.appearance().currentPageIndicatorTintColor = colorScheme == .light ? .black : .white
+                }
 
                 bottomNavigationArea
                     .padding(.horizontal)
