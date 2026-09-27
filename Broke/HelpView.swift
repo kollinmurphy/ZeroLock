@@ -87,20 +87,41 @@ struct HelpView: View {
                 .font(.footnote)
                 .foregroundColor(.secondary)
 
+            Text("Tip: It is highly recommended to 3D print a tag case to house the NFC chip for durability and a satisfying physical presence. Alternatively, you can purchase pre-housed NFC tags like key fobs or cards.")
+                .font(.footnote)
+                .fontWeight(.semibold)
+                .foregroundColor(.orange)
+
             Divider()
 
-            Link(destination: URL(string: "https://github.com/kollinmurphy/broke/blob/main/broke-tag-v2.stl")!) {
-                HStack {
-                    Image(systemName: "cube.fill")
-                    Text("Download 3D Printer Tag Case (.STL)")
-                    Spacer()
-                    Image(systemName: "arrow.up.right")
-                        .font(.caption)
+            VStack(alignment: .leading, spacing: 12) {
+                Link(destination: URL(string: "https://github.com/kollinmurphy/broke/blob/main/broke-tag-v2.stl")!) {
+                    HStack {
+                        Image(systemName: "cube.fill")
+                        Text("Download 3D Printer Tag Case (.STL)")
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.caption)
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.blue)
                 }
-                .font(.footnote)
-                .fontWeight(.medium)
-                .foregroundColor(.blue)
+
+                Divider()
+
+                Link(destination: URL(string: "https://www.amazon.com/s?k=nfc+chips+programmable")!) {
+                    HStack {
+                        Image(systemName: "cart.fill")
+                        Text("Buy NFC Tags on Amazon")
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.caption)
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.blue)
+                }
             }
+            .padding(.top, 4)
         }
         .padding()
         .background(Color.orange.opacity(0.12))

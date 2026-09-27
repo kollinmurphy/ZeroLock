@@ -33,52 +33,43 @@ struct OnboardingView: View {
                     .padding(.bottom, 16)
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Skip") {
-                        completeOnboarding()
-                    }
-                    .foregroundColor(.secondary)
-                }
-            }
         }
     }
 
     // MARK: - Pages
 
     private var welcomePage: some View {
-        VStack(spacing: 24) {
-            Spacer()
+        VerticallyCenteredScrollView {
+            VStack(spacing: 24) {
+                Image("GreenIcon")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 100, height: 100)
 
-            Image("GreenIcon")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100)
+                VStack(spacing: 8) {
+                    Text("Welcome to \(AppConstants.appName)")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
 
-            VStack(spacing: 8) {
-                Text("Welcome to \(AppConstants.appName)")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    Text("Physical App Blocker")
+                        .font(.title3)
+                        .foregroundColor(.secondary)
+                }
+
+                Text("ZeroLock uses physical NFC tags to force physical movement whenever you want to lock or unlock distracting apps.")
+                    .font(.body)
                     .multilineTextAlignment(.center)
-
-                Text("Physical App Blocker")
-                    .font(.title3)
                     .foregroundColor(.secondary)
+                    .padding(.horizontal, 24)
             }
-
-            Text("ZeroLock uses physical NFC tags to force physical movement whenever you want to lock or unlock distracting apps.")
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
-                .padding(.horizontal, 24)
-
-            Spacer()
+            .frame(maxWidth: .infinity)
+            .padding(.vertical)
         }
-        .padding()
     }
 
     private var hardwarePage: some View {
-        ScrollView {
+        VerticallyCenteredScrollView {
             VStack(spacing: 20) {
                 ZStack {
                     Circle()
@@ -91,7 +82,6 @@ struct OnboardingView: View {
                         .frame(width: 40, height: 40)
                         .foregroundColor(.orange)
                 }
-                .padding(.top, 20)
 
                 VStack(spacing: 8) {
                     Text("NFC Tag Required")
@@ -115,84 +105,110 @@ struct OnboardingView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
                 .background(Color.secondary.opacity(0.08))
                 .cornerRadius(12)
                 .padding(.horizontal)
 
-                // 3D Printer STL file download link
-                VStack(alignment: .leading, spacing: 10) {
+                // 3D Printer STL & Amazon purchase options
+                VStack(alignment: .leading, spacing: 12) {
                     HStack {
                         Image(systemName: "cube.fill")
                             .foregroundColor(.blue)
-                        Text("3D Printable Tag Case")
+                        Text("Getting an NFC Chip & Housing")
                             .font(.headline)
                     }
 
-                    Text("Have a 3D printer? Download our custom tag holder file:")
+                    Text("We recommend 3D printing a custom tag case to house your NFC chip, or purchasing a pre-housed NFC key fob or card.")
                         .font(.footnote)
+                        .fontWeight(.medium)
                         .foregroundColor(.secondary)
 
-                    Link(destination: URL(string: "https://github.com/kollinmurphy/broke/blob/main/broke-tag-v2.stl")!) {
-                        HStack {
-                            Image(systemName: "arrow.down.doc.fill")
-                            Text("Download 3D Printer STL File")
-                                .fontWeight(.medium)
-                            Spacer()
-                            Image(systemName: "arrow.up.right")
-                                .font(.caption)
+                    VStack(spacing: 8) {
+                        Link(destination: URL(string: "https://github.com/kollinmurphy/broke/blob/main/broke-tag-v2.stl")!) {
+                            HStack {
+                                Image(systemName: "arrow.down.doc.fill")
+                                Text("Download 3D Printer File (.STL)")
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                Image(systemName: "arrow.up.right")
+                                    .font(.caption)
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 14)
+                            .background(Color.blue)
+                            .cornerRadius(8)
                         }
-                        .font(.subheadline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 14)
-                        .background(Color.blue)
-                        .cornerRadius(8)
+
+                        Link(destination: URL(string: "https://www.amazon.com/s?k=nfc+chips+programmable")!) {
+                            HStack {
+                                Image(systemName: "cart.fill")
+                                Text("Buy NFC Tags on Amazon")
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                Image(systemName: "arrow.up.right")
+                                    .font(.caption)
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.blue)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 14)
+                            .background(Color.blue.opacity(0.12))
+                            .cornerRadius(8)
+                        }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
                 .background(Color.blue.opacity(0.08))
                 .cornerRadius(12)
                 .padding(.horizontal)
             }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical)
         }
     }
 
     private var setupStepsPage: some View {
-        VStack(spacing: 20) {
-            Text("How To Set Up")
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.top, 16)
+        VerticallyCenteredScrollView {
+            VStack(spacing: 20) {
+                Text("How To Set Up")
+                    .font(.title2)
+                    .fontWeight(.bold)
 
-            VStack(alignment: .leading, spacing: 20) {
-                stepRow(
-                    number: "1",
-                    icon: "square.grid.2x2.fill",
-                    iconColor: .purple,
-                    title: "1. Create App Profiles",
-                    description: "Select the apps and categories you wish to block during focus sessions."
-                )
+                VStack(alignment: .leading, spacing: 20) {
+                    stepRow(
+                        number: "1",
+                        icon: "square.grid.2x2.fill",
+                        iconColor: .purple,
+                        title: "1. Create App Profiles",
+                        description: "Select the apps and categories you wish to block during focus sessions."
+                    )
 
-                stepRow(
-                    number: "2",
-                    icon: "plus.viewfinder",
-                    iconColor: .blue,
-                    title: "2. Program NFC Tag",
-                    description: "Tap '+' on top right and hold your phone to your NFC chip to write the key."
-                )
+                    stepRow(
+                        number: "2",
+                        icon: "plus.viewfinder",
+                        iconColor: .blue,
+                        title: "2. Program NFC Tag",
+                        description: "Tap '+' on top right and hold your phone to your NFC chip to write the key."
+                    )
 
-                stepRow(
-                    number: "3",
-                    icon: "lock.shield.fill",
-                    iconColor: .green,
-                    title: "3. Lock & Unlock",
-                    description: "Tap the main shield button and scan your NFC tag to switch blocking on or off."
-                )
+                    stepRow(
+                        number: "3",
+                        icon: "lock.shield.fill",
+                        iconColor: .green,
+                        title: "3. Lock & Unlock",
+                        description: "Tap the main shield button and scan your NFC tag to switch blocking on or off."
+                    )
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
-
-            Spacer()
+            .frame(maxWidth: .infinity)
+            .padding(.vertical)
         }
     }
 
@@ -257,5 +273,24 @@ struct OnboardingView: View {
     private func completeOnboarding() {
         hasCompletedOnboarding = true
         dismiss()
+    }
+}
+
+// MARK: - Helper Views
+
+private struct VerticallyCenteredScrollView<Content: View>: View {
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            ScrollView(.vertical) {
+                content
+                    .frame(minWidth: geometry.size.width, minHeight: geometry.size.height, alignment: .center)
+            }
+        }
     }
 }

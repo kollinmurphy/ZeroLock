@@ -20,7 +20,6 @@ struct ProfileFormView: View {
     let profile: Profile?
     let canDelete: Bool
     let onDismiss: () -> Void
-    let iconSize: CGFloat = 28
     
     init(profile: Profile? = nil, canDelete: Bool = false, profileManager: ProfileManager, onDismiss: @escaping () -> Void) {
         self.profile = profile
@@ -39,101 +38,24 @@ struct ProfileFormView: View {
     
     var body: some View {
         NavigationStack {
-            Form {
-                Section(header: Text("Profile Info")) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Profile Name")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        TextField("Enter profile name", text: $profileName)
-                            .focused($isTextFieldFocused)
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        isTextFieldFocused = true
-                    }
-                    
-                    Button(action: { showSymbolsPicker = true }) {
-                        HStack {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .fill(Color.blue.opacity(0.12))
-                                    .frame(width: 36, height: 36)
-                                Image(systemName: profileIcon)
-                                    .font(.system(size: 18))
-                                    .foregroundColor(.blue)
-                            }
-                            
-                            Text("Select Icon")
-                                .foregroundColor(.primary)
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.vertical, 2)
-                    }
-                }
+            ZStack {
+                Color(uiColor: .systemGroupedBackground)
+                    .ignoresSafeArea()
                 
-                Section(header: Text("Screen Time Restrictions")) {
-                    Button(action: { showAppSelection = true }) {
-                        HStack {
-                            Text("Choose Blocked Activities")
-                                .foregroundColor(.blue)
-                                .fontWeight(.medium)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                        .padding(.vertical, 4)
-                    }
-                    
-                    HStack {
-                        Image(systemName: "app.badge")
-                            .foregroundColor(.blue)
-                        Text("Blocked Apps")
-                        Spacer()
-                        Text("\(activitySelection.applicationTokens.count)")
-                            .fontWeight(.bold)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    HStack {
-                        Image(systemName: "square.stack.3d.up.fill")
-                            .foregroundColor(.purple)
-                        Text("Blocked Categories")
-                        Spacer()
-                        Text("\(activitySelection.categoryTokens.count)")
-                            .fontWeight(.bold)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    HStack {
-                        Image(systemName: "safari")
-                            .foregroundColor(.teal)
-                        Text("Blocked Sites")
-                        Spacer()
-                        Text("\(activitySelection.webDomainTokens.count)")
-                            .fontWeight(.bold)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                if profile != nil && canDelete {
-                    Section {
-                        Button(action: { showDeleteConfirmation = true }) {
-                            HStack {
-                                Spacer()
-                                Text("Delete Profile")
-                                    .foregroundColor(.red)
-                                    .fontWeight(.semibold)
-                                Spacer()
-                            }
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 20) {
+                        // 1. Profile Info Card
+                        profileInfoCard
+                        
+                        // 2. Screen Time Restrictions Card (Standard Button + Separate Chips Row)
+                        restrictionsCard
+                        
+                        // 3. Delete Action (if editing existing profile)
+                        if profile != nil && canDelete {
+                            deleteProfileButton
                         }
                     }
+                    .padding(16)
                 }
             }
             .navigationTitle(profile == nil ? "New Profile" : "Edit Profile")
@@ -144,7 +66,7 @@ struct ProfileFormView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save", action: handleSave)
-                        .disabled(profileName.isEmpty)
+                        .disabled(profileName.trimmingCharacters(in: .whitespaces).isEmpty)
                         .fontWeight(.bold)
                 }
             }
@@ -184,11 +106,183 @@ struct ProfileFormView: View {
         }
     }
     
+    // Profile Name and Icon Card
+    private var profileInfoCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("PROFILE DETAILS")
+                .font(.caption)
+                .fontWeight(.bold)
+                .foregroundColor(.secondary)
+                .tracking(0.8)
+            
+            HStack(spacing: 14) {
+                // Icon Selector Button
+                Button(action: { showSymbolsPicker = true }) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .fill(Color.blue.opacity(0.12))
+                            .frame(width: 52, height: 52)
+                        
+                        Image(systemName: profileIcon)
+                            .font(.system(size: 24, weight: .semibold))
+                            .foregroundColor(.blue)
+                        
+                        Image(systemName: "pencil.circle.fill")
+                            .font(.system(size: 14))
+                            .foregroundColor(.blue)
+                            .background(Circle().fill(Color.white))
+                            .offset(x: 20, y: 20)
+                    }
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                // Profile Name TextField
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Profile Name")
+                        .font(.caption2)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.secondary)
+                    
+                    TextField("e.g. Deep Work, Sleep, Gym", text: $profileName)
+                        .font(.headline)
+                        .focused($isTextFieldFocused)
+                }
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(Color(uiColor: .secondarySystemGroupedBackground))
+                    .shadow(color: Color.black.opacity(0.03), radius: 8, x: 0, y: 2)
+            )
+        }
+    }
+    
+    // Screen Time Restrictions Card with Standard Button & Separate Chips Row
+    private var restrictionsCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("SCREEN TIME RESTRICTIONS")
+                .font(.caption)
+                .fontWeight(.bold)
+                .foregroundColor(.secondary)
+                .tracking(0.8)
+            
+            VStack(alignment: .leading, spacing: 14) {
+                // Standard Primary Action Button
+                Button(action: { showAppSelection = true }) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "app.badge.checkmark.fill")
+                            .font(.system(size: 18, weight: .semibold))
+                        
+                        Text("Choose Blocked Activities")
+                            .font(.body)
+                            .fontWeight(.semibold)
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.secondary)
+                    }
+                    .foregroundColor(.blue)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(Color.blue.opacity(0.1))
+                    )
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                // Separate Metric Chips Row
+                HStack(spacing: 8) {
+                    metricChip(
+                        icon: "app.badge",
+                        count: activitySelection.applicationTokens.count,
+                        label: activitySelection.applicationTokens.count == 1 ? "App" : "Apps",
+                        color: .blue
+                    )
+                    
+                    metricChip(
+                        icon: "square.stack.3d.up.fill",
+                        count: activitySelection.categoryTokens.count,
+                        label: activitySelection.categoryTokens.count == 1 ? "Category" : "Categories",
+                        color: .purple
+                    )
+                    
+                    metricChip(
+                        icon: "safari",
+                        count: activitySelection.webDomainTokens.count,
+                        label: activitySelection.webDomainTokens.count == 1 ? "Site" : "Sites",
+                        color: .teal
+                    )
+                }
+            }
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(Color(uiColor: .secondarySystemGroupedBackground))
+                    .shadow(color: Color.black.opacity(0.03), radius: 8, x: 0, y: 2)
+            )
+        }
+    }
+    
+    // Custom Metric Chip Component
+    private func metricChip(icon: String, count: Int, label: String, color: Color) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(color)
+            
+            Text("\(count)")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(.primary)
+            
+            Text(label)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(.secondary)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
+        .background(
+            Capsule()
+                .fill(Color(uiColor: .tertiarySystemFill))
+        )
+    }
+    
+    // Delete Profile Button
+    private var deleteProfileButton: some View {
+        Button(action: { showDeleteConfirmation = true }) {
+            HStack(spacing: 8) {
+                Image(systemName: "trash.fill")
+                    .font(.system(size: 15, weight: .semibold))
+                Text("Delete Profile")
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+            }
+            .foregroundColor(.red)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color.red.opacity(0.08))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Color.red.opacity(0.2), lineWidth: 1)
+                    )
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+        .padding(.top, 8)
+    }
+    
     private func handleSave() {
+        let trimmedName = profileName.trimmingCharacters(in: .whitespaces)
+        guard !trimmedName.isEmpty else { return }
+        
         if let existingProfile = profile {
             profileManager.updateProfile(
                 id: existingProfile.id,
-                name: profileName,
+                name: trimmedName,
                 appTokens: activitySelection.applicationTokens,
                 categoryTokens: activitySelection.categoryTokens,
                 webDomainTokens: activitySelection.webDomainTokens,
@@ -196,7 +290,7 @@ struct ProfileFormView: View {
             )
         } else {
             let newProfile = Profile(
-                name: profileName,
+                name: trimmedName,
                 appTokens: activitySelection.applicationTokens,
                 categoryTokens: activitySelection.categoryTokens,
                 webDomainTokens: activitySelection.webDomainTokens,
@@ -207,7 +301,6 @@ struct ProfileFormView: View {
         onDismiss()
     }
 }
-
 
 struct IconSelectionSheet: View {
     let icons: [String]
