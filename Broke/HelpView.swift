@@ -7,7 +7,13 @@ import SwiftUI
 
 struct HelpView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var appBlocker: AppBlocker
     @State private var showOnboarding = false
+    @AppStorage(AppConstants.isDemoModeKey) private var isDemoMode = false
+
+    private var isBlocking: Bool {
+        appBlocker.isBlocking
+    }
 
     var body: some View {
         NavigationView {
@@ -27,6 +33,9 @@ struct HelpView: View {
 
                     // Open Source section
                     openSourceSection
+
+                    // Demo Mode section
+                    demoModeSection
                 }
                 .padding()
             }
@@ -242,6 +251,41 @@ struct HelpView: View {
         .padding()
         .background(Color.secondary.opacity(0.1))
         .cornerRadius(12)
+    }
+
+    private var demoModeSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                HStack(spacing: 8) {
+                    Image(systemName: "play.rectangle.fill")
+                        .foregroundColor(isBlocking ? .secondary : .purple)
+                        .font(.title3)
+
+                    Text("Demo Mode")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                }
+
+                Spacer()
+
+                Toggle("", isOn: $isDemoMode)
+                    .labelsHidden()
+                    .disabled(isBlocking)
+            }
+
+            Text(isBlocking
+                ? "Demo Mode cannot be changed while app blocking is active."
+                : "Enable Demo Mode to bypass the requirement for a physical NFC chip. When enabled, tapping the main button on the home screen directly toggles app blocking.")
+                .font(.subheadline)
+                .foregroundColor(isBlocking ? .secondary : .secondary)
+        }
+        .padding()
+        .background(Color.purple.opacity(isBlocking ? 0.05 : 0.12))
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.purple.opacity(isBlocking ? 0.15 : 0.3), lineWidth: 1)
+        )
     }
 
     private func helpStepRow(number: String, icon: String, iconColor: Color, title: String, description: String) -> some View {

@@ -22,6 +22,11 @@ class AppBlocker: ObservableObject {
     }
     
     func requestAuthorization() async {
+        let args = CommandLine.arguments
+        if args.contains(where: { $0.hasPrefix("-UITest_") }) {
+            self.isAuthorized = true
+            return
+        }
         do {
             try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
             self.isAuthorized = true
@@ -56,6 +61,16 @@ class AppBlocker: ObservableObject {
     }
     
     private func loadBlockingState() {
+        let args = CommandLine.arguments
+        if args.contains("-UITest_ShieldActive") {
+            isBlocking = true
+            isAuthorized = true
+            return
+        } else if args.contains("-UITest_ReadyToLock") {
+            isBlocking = false
+            isAuthorized = true
+            return
+        }
         isBlocking = UserDefaults.standard.bool(forKey: "isBlocking")
     }
     

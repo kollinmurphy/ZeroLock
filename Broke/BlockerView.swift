@@ -30,12 +30,14 @@ struct BlockerView: View {
     @EnvironmentObject private var appBlocker: AppBlocker
     @EnvironmentObject private var profileManager: ProfileManager
     @StateObject private var nfcReader = NFCReader()
+    @AppStorage(AppConstants.isDemoModeKey) private var isDemoMode = false
     private let tagPhrase = AppConstants.tagPhrase
     
     @State private var showWrongTagAlert = false
     @State private var showCreateTagAlert = false
     @State private var nfcWriteSuccess = false
     @State private var showHelpSheet = false
+    @State private var showOnboardingSheet = false
     @State private var isPulsing = false
     
     private var isBlocking: Bool {
@@ -77,6 +79,10 @@ struct BlockerView: View {
             }
             .sheet(isPresented: $showHelpSheet) {
                 HelpView()
+                    .environmentObject(appBlocker)
+            }
+            .sheet(isPresented: $showOnboardingSheet) {
+                OnboardingView(hasCompletedOnboarding: .constant(true))
             }
             .alert(isPresented: $showWrongTagAlert) {
                 Alert(
@@ -101,6 +107,11 @@ struct BlockerView: View {
         .onAppear {
             withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
                 isPulsing = true
+            }
+            if CommandLine.arguments.contains("-UITest_OpenHelp") {
+                showHelpSheet = true
+            } else if CommandLine.arguments.contains("-UITest_OpenOnboarding") {
+                showOnboardingSheet = true
             }
         }
     }
@@ -146,7 +157,7 @@ struct BlockerView: View {
                     .fill(isBlocking ? Color.red.opacity(0.15) : Color.green.opacity(0.15))
             )
             
-            // Hero NFC Action Button with GreenIcon / RedIcon App Icons
+            // Hero Action Button with GreenIcon / RedIcon App Icons
             Button(action: {
                 scanTag()
             }) {
@@ -186,7 +197,9 @@ struct BlockerView: View {
                         Image(systemName: "hand.tap.fill")
                             .font(.system(size: 13, weight: .bold))
                         
-                        Text(isBlocking ? "TAP TO UNLOCK (NFC)" : "TAP TO SCAN NFC TAG")
+                        Text(isDemoMode
+                            ? (isBlocking ? "TAP TO UNLOCK" : "TAP TO LOCK")
+                            : (isBlocking ? "TAP TO UNLOCK (NFC)" : "TAP TO SCAN NFC TAG"))
                             .font(.system(size: 12, weight: .bold))
                             .tracking(0.6)
                         
@@ -220,7 +233,9 @@ struct BlockerView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
                 
-                Text(isBlocking ? "Tap button and scan your NFC tag to unblock apps" : "Tap button and hold your NFC tag to the top back of your iPhone.")
+                Text(isDemoMode
+                    ? (isBlocking ? "Tap button to unblock apps" : "Tap button to block apps")
+                    : (isBlocking ? "Tap button and scan your NFC tag to unblock apps" : "Tap button and hold your NFC tag to the top back of your iPhone."))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -270,13 +285,17 @@ struct BlockerView: View {
     }
     
     private func scanTag() {
-        nfcReader.scan { payload in
-            if payload == tagPhrase {
-                NSLog("Toggling block. Tag: \(payload)")
-                appBlocker.toggleBlocking(for: profileManager.currentProfile)
-            } else {
-                showWrongTagAlert = true
-                NSLog("Wrong Tag!\nPayload: \(payload)")
+        if isDemoMode {
+            appBlocker.toggleBlocking(for: profileManager.currentProfile)
+        } else {
+            nfcReader.scan { payload in
+                if payload == tagPhrase {
+                    NSLog("Toggling block. Tag: \(payload)")
+                    appBlocker.toggleBlocking(for: profileManager.currentProfile)
+                } else {
+                    showWrongTagAlert = true
+                    NSLog("Wrong Tag!\nPayload: \(payload)")
+                }
             }
         }
     }

@@ -1,3 +1,4 @@
 *.xcuserdatad
 .venv
 .DS_Store
+screenshots

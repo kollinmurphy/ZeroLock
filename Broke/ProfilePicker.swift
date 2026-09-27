@@ -83,6 +83,11 @@ struct ProfilesPicker: View {
             }
             .interactiveDismissDisabled(true)
         }
+        .onAppear {
+            if CommandLine.arguments.contains("-UITest_EditProfile") {
+                editingProfile = profileManager.currentProfile
+            }
+        }
     }
 }
 
@@ -128,11 +133,11 @@ struct ProfileCardView: View {
                 
                 // Metric Badges
                 HStack(spacing: 6) {
-                    if !profile.appTokens.isEmpty {
-                        badgePill(icon: "app.badge", count: profile.appTokens.count, label: "apps")
+                    if profile.appCount > 0 {
+                        badgePill(icon: "app.badge", count: profile.appCount, label: "apps")
                     }
-                    if !profile.categoryTokens.isEmpty {
-                        badgePill(icon: "square.stack.3d.up.fill", count: profile.categoryTokens.count, label: "cats")
+                    if profile.categoryCount > 0 {
+                        badgePill(icon: "square.stack.3d.up.fill", count: profile.categoryCount, label: "cats")
                     }
                 }
             }

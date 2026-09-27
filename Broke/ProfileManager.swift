@@ -62,7 +62,21 @@ class ProfileManager: ObservableObject {
     
     init() {
         loadProfiles()
+        setupForUITestIfNeeded()
         ensureDefaultProfile()
+    }
+    
+    private func setupForUITestIfNeeded() {
+        let args = CommandLine.arguments
+        guard args.contains(where: { $0.hasPrefix("-UITest_") }) else { return }
+        
+        let p1 = Profile(name: "Deep Work", appTokens: [], categoryTokens: [], webDomainTokens: [], icon: "brain.head.profile", mockAppCount: 6, mockCategoryCount: 2)
+        let p2 = Profile(name: "Social Detox", appTokens: [], categoryTokens: [], webDomainTokens: [], icon: "bubble.left", mockAppCount: 8, mockCategoryCount: 1)
+        let p3 = Profile(name: "Bedtime Rest", appTokens: [], categoryTokens: [], webDomainTokens: [], icon: "moon", mockAppCount: 12, mockCategoryCount: 3)
+        let p4 = Profile(name: "Study Session", appTokens: [], categoryTokens: [], webDomainTokens: [], icon: "book", mockAppCount: 4, mockCategoryCount: 1)
+        
+        profiles = [p1, p2, p3, p4]
+        currentProfileId = p1.id
     }
     
     var currentProfile: Profile {
@@ -201,17 +215,37 @@ struct Profile: Identifiable, Codable, Equatable {
     var categoryTokens: Set<ActivityCategoryToken>
     var webDomainTokens: Set<WebDomainToken>
     var icon: String
+    var mockAppCount: Int?
+    var mockCategoryCount: Int?
+    
+    var appCount: Int {
+        mockAppCount ?? appTokens.count
+    }
+    
+    var categoryCount: Int {
+        mockCategoryCount ?? categoryTokens.count
+    }
     
     var isDefault: Bool {
         name == "Default"
     }
     
-    init(name: String, appTokens: Set<ApplicationToken>, categoryTokens: Set<ActivityCategoryToken>, webDomainTokens: Set<WebDomainToken>, icon: String = "bell.slash") {
+    init(
+        name: String,
+        appTokens: Set<ApplicationToken>,
+        categoryTokens: Set<ActivityCategoryToken>,
+        webDomainTokens: Set<WebDomainToken>,
+        icon: String = "bell.slash",
+        mockAppCount: Int? = nil,
+        mockCategoryCount: Int? = nil
+    ) {
         self.id = UUID()
         self.name = name
         self.appTokens = appTokens
         self.categoryTokens = categoryTokens
         self.icon = icon
         self.webDomainTokens = webDomainTokens
+        self.mockAppCount = mockAppCount
+        self.mockCategoryCount = mockCategoryCount
     }
 }

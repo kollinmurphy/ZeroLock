@@ -196,20 +196,23 @@ struct ProfileFormView: View {
                 // Separate Metric Chips Row (shown only if items are selected)
                 if hasSelectedActivities {
                     HStack(spacing: 8) {
-                        if activitySelection.applicationTokens.count > 0 {
+                        let appCount = activitySelection.applicationTokens.count > 0 ? activitySelection.applicationTokens.count : (profile?.appCount ?? 0)
+                        let catCount = activitySelection.categoryTokens.count > 0 ? activitySelection.categoryTokens.count : (profile?.categoryCount ?? 0)
+                        
+                        if appCount > 0 {
                             metricChip(
                                 icon: "app.badge",
-                                count: activitySelection.applicationTokens.count,
-                                label: activitySelection.applicationTokens.count == 1 ? "App" : "Apps",
+                                count: appCount,
+                                label: appCount == 1 ? "App" : "Apps",
                                 color: .blue
                             )
                         }
                         
-                        if activitySelection.categoryTokens.count > 0 {
+                        if catCount > 0 {
                             metricChip(
                                 icon: "square.stack.3d.up.fill",
-                                count: activitySelection.categoryTokens.count,
-                                label: activitySelection.categoryTokens.count == 1 ? "Category" : "Categories",
+                                count: catCount,
+                                label: catCount == 1 ? "Category" : "Categories",
                                 color: .purple
                             )
                         }
@@ -235,6 +238,8 @@ struct ProfileFormView: View {
     }
     
     private var hasSelectedActivities: Bool {
+        (profile?.appCount ?? 0) > 0 ||
+        (profile?.categoryCount ?? 0) > 0 ||
         !activitySelection.applicationTokens.isEmpty ||
         !activitySelection.categoryTokens.isEmpty ||
         !activitySelection.webDomainTokens.isEmpty

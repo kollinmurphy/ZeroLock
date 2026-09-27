@@ -12,4 +12,7 @@ enum AppConstants {
     
     /// The NDEF payload URI scheme used to program and detect NFC tags.
     static let tagPhrase = "zerolock://zerolock"
+    
+    /// UserDefaults key for Demo Mode setting.
+    static let isDemoModeKey = "isDemoMode"
 }
