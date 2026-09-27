@@ -13,7 +13,6 @@ class ProfileManager: ObservableObject {
     @Published var profiles: [Profile] = []
     @Published var currentProfileId: UUID?
     
-    
     let icons = [
         // Health & Focus
         "figure.mind.and.body", "leaf", "heart", "bolt.heart", "figure.walk", "figure.run",
@@ -119,6 +118,16 @@ class ProfileManager: ObservableObject {
         }
     }
     
+    func moveProfile(from sourceID: UUID, to destinationID: UUID) {
+        guard let fromIndex = profiles.firstIndex(where: { $0.id == sourceID }),
+              let toIndex = profiles.firstIndex(where: { $0.id == destinationID }),
+              fromIndex != toIndex else { return }
+        
+        let movedProfile = profiles.remove(at: fromIndex)
+        profiles.insert(movedProfile, at: toIndex)
+        saveProfiles()
+    }
+    
     func deleteProfile(withId id: UUID) {
         profiles.removeAll { $0.id == id }
         
@@ -185,7 +194,7 @@ class ProfileManager: ObservableObject {
     }
 }
 
-struct Profile: Identifiable, Codable {
+struct Profile: Identifiable, Codable, Equatable {
     let id: UUID
     var name: String
     var appTokens: Set<ApplicationToken>

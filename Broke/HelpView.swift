@@ -7,6 +7,7 @@ import SwiftUI
 
 struct HelpView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var showOnboarding = false
 
     var body: some View {
         NavigationView {
@@ -38,6 +39,9 @@ struct HelpView: View {
                     }
                     .fontWeight(.semibold)
                 }
+            }
+            .sheet(isPresented: $showOnboarding) {
+                OnboardingView(hasCompletedOnboarding: .constant(true))
             }
         }
     }
@@ -82,6 +86,21 @@ struct HelpView: View {
             Text("\(AppConstants.appName) requires a physical NDEF-compliant NFC tag (such as NTAG213, NTAG215, or NTAG216 stickers, cards, or key fobs). You will program this tag inside the app to toggle app blocking on and off.")
                 .font(.footnote)
                 .foregroundColor(.secondary)
+
+            Divider()
+
+            Link(destination: URL(string: "https://github.com/kollinmurphy/broke/blob/main/broke-tag-v2.stl")!) {
+                HStack {
+                    Image(systemName: "cube.fill")
+                    Text("Download 3D Printer Tag Case (.STL)")
+                    Spacer()
+                    Image(systemName: "arrow.up.right")
+                        .font(.caption)
+                }
+                .font(.footnote)
+                .fontWeight(.medium)
+                .foregroundColor(.blue)
+            }
         }
         .padding()
         .background(Color.orange.opacity(0.12))
@@ -121,6 +140,19 @@ struct HelpView: View {
                 title: "Lock & Unlock",
                 description: "Tap the main center button on the home screen and scan your programmed NFC tag against your iPhone to toggle app blocking."
             )
+
+            Button(action: {
+                showOnboarding = true
+            }) {
+                HStack {
+                    Image(systemName: "play.circle.fill")
+                    Text("Replay Setup Walkthrough")
+                        .fontWeight(.semibold)
+                }
+                .font(.subheadline)
+                .foregroundColor(.blue)
+                .padding(.top, 4)
+            }
         }
     }
 

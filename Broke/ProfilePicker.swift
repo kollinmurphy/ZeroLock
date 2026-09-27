@@ -13,108 +13,205 @@ struct ProfilesPicker: View {
     @State private var showAddProfileView = false
     @State private var editingProfile: Profile?
     
+    private let columns = [
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
+    ]
+    
     var body: some View {
-        VStack {HStack {
-            Text("Profiles")
-                .font(.headline)
-            
-            Spacer()
-            
-            Button(action: {
-                showAddProfileView = true
-            }) {
-                Image(systemName: "plus")
+        VStack(alignment: .leading, spacing: 16) {
+            // Header
+            HStack(spacing: 8) {
+                Image(systemName: "square.stack.3d.up.fill")
+                    .foregroundColor(.blue)
                     .font(.headline)
+                
+                Text("Focus Profiles")
+                    .font(.title3)
+                    .fontWeight(.bold)
             }
-        }
-        .padding(.horizontal)
-        .padding(.top)
+            .padding(.horizontal, 4)
             
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 90), spacing: 10)], spacing: 10) {
-                    ForEach(profileManager.profiles) { profile in
-                        Button(action: {
-                            withAnimation(.spring(response: 0.2, dampingFraction: 0.6)) {
-                                if (profileManager.currentProfileId == profile.id) {
+            // Grid of Profile Cards
+            LazyVGrid(columns: columns, spacing: 12) {
+                ForEach(profileManager.profiles) { profile in
+                    let isSelected = (profile.id == profileManager.currentProfileId)
+                    
+                    ProfileCardView(
+                        profile: profile,
+                        isSelected: isSelected,
+                        onSelect: {
+                            withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
+                                if isSelected {
                                     editingProfile = profile
-                                }
-                                else
-                                {
+                                } else {
                                     profileManager.setCurrentProfile(id: profile.id)
                                 }
                             }
-                        }) {
-                            ProfileCell(profile: profile, isSelected: profile.id == profileManager.currentProfileId)
-                        }
-                        .onLongPressGesture {
+                        },
+                        onEdit: {
                             editingProfile = profile
                         }
-                        
-                    }
+                    )
                 }
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
+                
+                // Add Profile Card
+                AddProfileCardButton {
+                    showAddProfileView = true
+                }
             }
         }
-        .background(Color("ProfileSectionBackground"))
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .fill(Color(uiColor: .secondarySystemGroupedBackground))
+                .shadow(color: Color.black.opacity(0.04), radius: 10, x: 0, y: 4)
+        )
         .sheet(item: $editingProfile) { profile in
-            ProfileFormView(profile: profile, canDelete: profileManager.profiles.count > 1, profileManager: profileManager) {
+            ProfileFormView(
+                profile: profile,
+                canDelete: profileManager.profiles.count > 1,
+                profileManager: profileManager
+            ) {
                 editingProfile = nil
-            }.interactiveDismissDisabled(true)
+            }
+            .interactiveDismissDisabled(true)
         }
         .sheet(isPresented: $showAddProfileView) {
             ProfileFormView(profileManager: profileManager) {
                 showAddProfileView = false
-            }.interactiveDismissDisabled(true)
+            }
+            .interactiveDismissDisabled(true)
         }
     }
 }
 
-struct ProfileCellBase: View {
-    let name: String
-    let icon: String
-    let appsBlocked: Int?
-    let categoriesBlocked: Int?
-    let isSelected: Bool
-    var isDashed: Bool = false
-    var hasDivider: Bool = true
-    
-    var body: some View {
-        VStack(spacing: 10) {
-            Image(systemName: icon)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 30, height: 30)
-            Text(name)
-                .font(.caption)
-                .fontWeight(.medium)
-                .lineLimit(1)
-        }
-        .frame(width: 90, height: 90)
-        .padding(2)
-        .background(isSelected ? Color.blue.opacity(0.3) : Color.clear)
-        .cornerRadius(8)
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(
-                    isSelected ? Color.blue : (isDashed ? Color.secondary : Color.clear),
-                    style: StrokeStyle(lineWidth: 2, dash: isDashed ? [5] : [])
-                )
-        )
-    }
-}
-
-struct ProfileCell: View {
+struct ProfileCardView: View {
     let profile: Profile
     let isSelected: Bool
+    let onSelect: () -> Void
+    let onEdit: () -> Void
     
     var body: some View {
-        ProfileCellBase(
-            name: profile.name,
-            icon: profile.icon,
-            appsBlocked: profile.appTokens.count,
-            categoriesBlocked: profile.categoryTokens.count,
-            isSelected: isSelected
+        Button(action: onSelect) {
+            VStack(alignment: .leading, spacing: 12) {
+                // Top row: Icon and Options Button
+                HStack(alignment: .center) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(isSelected ? Color.blue.opacity(0.18) : Color(uiColor: .tertiarySystemFill))
+                            .frame(width: 44, height: 44)
+                        
+                        Image(systemName: profile.icon)
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(isSelected ? .blue : .primary)
+                    }
+                    
+                    Spacer()
+                    
+                    Button(action: onEdit) {
+                        Image(systemName: "ellipsis")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(.secondary)
+                            .padding(8)
+                            .background(Circle().fill(Color(uiColor: .tertiarySystemFill)))
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+                
+                // Profile Name
+                Text(profile.name)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+                
+                // Metric Badges
+                HStack(spacing: 6) {
+                    badgePill(icon: "app.badge", count: profile.appTokens.count, label: "apps")
+                    if !profile.categoryTokens.isEmpty {
+                        badgePill(icon: "square.stack.3d.up.fill", count: profile.categoryTokens.count, label: "cats")
+                    }
+                }
+            }
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(isSelected ? Color.blue.opacity(0.06) : Color(uiColor: .systemBackground))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(
+                        isSelected ? Color.blue : Color(uiColor: .separator).opacity(0.4),
+                        lineWidth: isSelected ? 2 : 1
+                    )
+            )
+            .shadow(
+                color: isSelected ? Color.blue.opacity(0.15) : Color.black.opacity(0.02),
+                radius: isSelected ? 8 : 4,
+                x: 0,
+                y: isSelected ? 4 : 2
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+        .onLongPressGesture {
+            onEdit()
+        }
+    }
+    
+    private func badgePill(icon: String, count: Int, label: String) -> some View {
+        HStack(spacing: 3) {
+            Image(systemName: icon)
+                .font(.system(size: 10))
+            Text("\(count)")
+                .font(.caption2)
+                .fontWeight(.bold)
+        }
+        .foregroundColor(.secondary)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 3)
+        .background(
+            Capsule()
+                .fill(Color(uiColor: .secondarySystemFill))
         )
+    }
+}
+
+struct AddProfileCardButton: View {
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 8) {
+                ZStack {
+                    Circle()
+                        .fill(Color.blue.opacity(0.1))
+                        .frame(width: 40, height: 40)
+                    
+                    Image(systemName: "plus")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.blue)
+                }
+                
+                Text("Add Profile")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.blue)
+            }
+            .frame(maxWidth: .infinity, minHeight: 110)
+            .background(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(
+                        Color.blue.opacity(0.4),
+                        style: StrokeStyle(lineWidth: 1.5, dash: [6, 4])
+                    )
+                    .background(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .fill(Color.blue.opacity(0.02))
+                    )
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }

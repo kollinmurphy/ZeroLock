@@ -10,6 +10,7 @@
 		BB4F2A5E2E5A81C000773EB3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB4F2A5D2E5A81C000773EB3 /* LaunchScreen.storyboard */; };
 		BB71626A3068A658002EF1E6 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7162693068A658002EF1E6 /* HelpView.swift */; };
 		BB71626C3068A866002EF1E6 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB71626B3068A866002EF1E6 /* AppConstants.swift */; };
+		BB71626E3068AAE1002EF1E6 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB71626D3068AAE1002EF1E6 /* OnboardingView.swift */; };
 		F51C38D22C775953003B4EB3 /* CoreNFC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51C38D02C77594E003B4EB3 /* CoreNFC.framework */; };
 		F51C38D72C775CAF003B4EB3 /* AppBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51C38D62C775CAF003B4EB3 /* AppBlocker.swift */; };
 		F51C38D92C775CEC003B4EB3 /* NfcReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51C38D82C775CEC003B4EB3 /* NfcReader.swift */; };
@@ -26,6 +27,7 @@
 		BB4F2A5D2E5A81C000773EB3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB7162693068A658002EF1E6 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		BB71626B3068A866002EF1E6 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		BB71626D3068AAE1002EF1E6 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		F51C38D02C77594E003B4EB3 /* CoreNFC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreNFC.framework; path = System/Library/Frameworks/CoreNFC.framework; sourceTree = SDKROOT; };
 		F51C38D52C775AAF003B4EB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F51C38D62C775CAF003B4EB3 /* AppBlocker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBlocker.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				BB4F2A5D2E5A81C000773EB3 /* LaunchScreen.storyboard */,
 				BB7162693068A658002EF1E6 /* HelpView.swift */,
 				BB71626B3068A866002EF1E6 /* AppConstants.swift */,
+				BB71626D3068AAE1002EF1E6 /* OnboardingView.swift */,
 			);
 			path = Broke;
 			sourceTree = "<group>";
@@ -185,6 +188,7 @@
 				F51C38EA2C78B47A003B4EB3 /* ProfileFormView.swift in Sources */,
 				BB71626C3068A866002EF1E6 /* AppConstants.swift in Sources */,
 				F51C38DB2C775D0B003B4EB3 /* BlockerView.swift in Sources */,
+				BB71626E3068AAE1002EF1E6 /* OnboardingView.swift in Sources */,
 				F51C38D92C775CEC003B4EB3 /* NfcReader.swift in Sources */,
 				F51C38E12C77DADA003B4EB3 /* ProfileManager.swift in Sources */,
 				F5A3B05F2C733E3400BD6C7F /* BrokeApp.swift in Sources */,

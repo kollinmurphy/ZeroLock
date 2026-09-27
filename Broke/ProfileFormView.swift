@@ -20,7 +20,7 @@ struct ProfileFormView: View {
     let profile: Profile?
     let canDelete: Bool
     let onDismiss: () -> Void
-    let iconSize: CGFloat = 30
+    let iconSize: CGFloat = 28
     
     init(profile: Profile? = nil, canDelete: Bool = false, profileManager: ProfileManager, onDismiss: @escaping () -> Void) {
         self.profile = profile
@@ -38,10 +38,10 @@ struct ProfileFormView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
-                Section(header: Text("Profile")) {
-                    VStack(alignment: .leading) {
+                Section(header: Text("Profile Info")) {
+                    VStack(alignment: .leading, spacing: 4) {
                         Text("Profile Name")
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -55,83 +55,118 @@ struct ProfileFormView: View {
                     
                     Button(action: { showSymbolsPicker = true }) {
                         HStack {
-                            Image(systemName: profileIcon)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: iconSize, height: iconSize)
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .fill(Color.blue.opacity(0.12))
+                                    .frame(width: 36, height: 36)
+                                Image(systemName: profileIcon)
+                                    .font(.system(size: 18))
+                                    .foregroundColor(.blue)
+                            }
+                            
                             Text("Select Icon")
+                                .foregroundColor(.primary)
+                            
                             Spacer()
+                            
                             Image(systemName: "chevron.right")
+                                .font(.caption)
                                 .foregroundColor(.secondary)
-                        }.padding(.vertical, 4)
+                        }
+                        .padding(.vertical, 2)
                     }
                 }
                 
-                Section(header: Text("Screen Time")) {
+                Section(header: Text("Screen Time Restrictions")) {
                     Button(action: { showAppSelection = true }) {
                         HStack {
                             Text("Choose Blocked Activities")
+                                .foregroundColor(.blue)
+                                .fontWeight(.medium)
                             Spacer()
                             Image(systemName: "chevron.right")
+                                .font(.caption)
                                 .foregroundColor(.secondary)
                         }
-                        .padding(.vertical, 10)
+                        .padding(.vertical, 4)
                     }
                     
                     HStack {
                         Image(systemName: "app.badge")
+                            .foregroundColor(.blue)
                         Text("Blocked Apps")
                         Spacer()
                         Text("\(activitySelection.applicationTokens.count)")
                             .fontWeight(.bold)
+                            .foregroundColor(.secondary)
                     }
+                    
                     HStack {
                         Image(systemName: "square.stack.3d.up.fill")
+                            .foregroundColor(.purple)
                         Text("Blocked Categories")
                         Spacer()
                         Text("\(activitySelection.categoryTokens.count)")
                             .fontWeight(.bold)
+                            .foregroundColor(.secondary)
                     }
+                    
                     HStack {
                         Image(systemName: "safari")
+                            .foregroundColor(.teal)
                         Text("Blocked Sites")
                         Spacer()
                         Text("\(activitySelection.webDomainTokens.count)")
                             .fontWeight(.bold)
+                            .foregroundColor(.secondary)
                     }
                 }
                 
                 if profile != nil && canDelete {
                     Section {
                         Button(action: { showDeleteConfirmation = true }) {
-                            Text("Delete Profile")
-                                .foregroundColor(.red)
+                            HStack {
+                                Spacer()
+                                Text("Delete Profile")
+                                    .foregroundColor(.red)
+                                    .fontWeight(.semibold)
+                                Spacer()
+                            }
                         }
                     }
                 }
             }
-            .navigationTitle(profile == nil ? "Add Profile" : "Edit Profile")
-            .navigationBarItems(
-                leading: Button("Cancel", action: onDismiss),
-                trailing: Button("Save", action: handleSave)
-                    .disabled(profileName.isEmpty)
-                    .fontWeight(.bold)
-                    .tint(.blue)
-                
-            )
+            .navigationTitle(profile == nil ? "New Profile" : "Edit Profile")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", action: onDismiss)
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save", action: handleSave)
+                        .disabled(profileName.isEmpty)
+                        .fontWeight(.bold)
+                }
+            }
             .sheet(isPresented: $showSymbolsPicker) {
-                IconSelectionSheet(icons: profileManager.icons, selectedIcon: $profileIcon).interactiveDismissDisabled(true)
+                IconSelectionSheet(icons: profileManager.icons, selectedIcon: $profileIcon)
+                    .interactiveDismissDisabled(true)
             }
             .sheet(isPresented: $showAppSelection) {
-                NavigationView {
+                NavigationStack {
                     FamilyActivityPicker(selection: $activitySelection)
-                        .navigationBarItems(trailing: Button("Done") {
-                            showAppSelection = false
+                        .navigationTitle("Select Apps")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("Done") {
+                                    showAppSelection = false
+                                }
+                                .fontWeight(.bold)
+                            }
                         }
-                            .fontWeight(.bold)
-                            .foregroundColor(.blue)
-                        )
-                }.interactiveDismissDisabled(true)
+                }
+                .interactiveDismissDisabled(true)
             }
             .alert(isPresented: $showDeleteConfirmation) {
                 Alert(
@@ -179,8 +214,6 @@ struct IconSelectionSheet: View {
     @Binding var selectedIcon: String
     @Environment(\.dismiss) private var dismiss
     
-    @State private var pressedIcon: String? = nil
-    
     let columns = [GridItem(.adaptive(minimum: 60), spacing: 16)]
     
     var body: some View {
@@ -195,18 +228,18 @@ struct IconSelectionSheet: View {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                                 dismiss()
                             }
-                        }){
+                        }) {
                             Image(systemName: icon)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 40, height: 40)
-                                .padding()
+                                .frame(width: 32, height: 32)
+                                .padding(12)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(selectedIcon == icon ? Color.blue.opacity(0.2) : Color.clear)
+                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                        .fill(selectedIcon == icon ? Color.blue.opacity(0.18) : Color(uiColor: .tertiarySystemFill))
                                 )
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
                                         .stroke(selectedIcon == icon ? Color.blue : Color.clear, lineWidth: 2)
                                 )
                         }
@@ -215,6 +248,7 @@ struct IconSelectionSheet: View {
                 .padding(16)
             }
             .navigationTitle("Select Icon")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
