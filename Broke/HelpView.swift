@@ -104,7 +104,7 @@ struct HelpView: View {
             Divider()
 
             VStack(alignment: .leading, spacing: 12) {
-                Link(destination: URL(string: "https://github.com/kollinmurphy/broke/blob/main/broke-tag-v2.stl")!) {
+                Link(destination: URL(string: "https://github.com/kollinmurphy/ZeroLock/blob/main/broke-tag-v2.stl")!) {
                     HStack {
                         Image(systemName: "cube.fill")
                         Text("Download 3D Printer Tag Case (.STL)")
@@ -220,7 +220,7 @@ struct HelpView: View {
                 .foregroundColor(.secondary)
 
             VStack(alignment: .leading, spacing: 10) {
-                Link(destination: URL(string: "https://github.com/kollinmurphy/broke")!) {
+                Link(destination: URL(string: "https://github.com/kollinmurphy/ZeroLock")!) {
                     HStack {
                         Image(systemName: "safari")
                         Text("App Repository (GitHub)")

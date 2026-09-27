@@ -131,7 +131,7 @@ struct OnboardingView: View {
                         .foregroundColor(.secondary)
 
                     VStack(spacing: 8) {
-                        Link(destination: URL(string: "https://github.com/kollinmurphy/broke/blob/main/broke-tag-v2.stl")!) {
+                        Link(destination: URL(string: "https://github.com/kollinmurphy/ZeroLock/blob/main/broke-tag-v2.stl")!) {
                             HStack {
                                 Image(systemName: "arrow.down.doc.fill")
                                 Text("Download 3D Printer File (.STL)")
