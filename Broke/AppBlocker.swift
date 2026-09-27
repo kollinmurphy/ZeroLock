@@ -8,6 +8,7 @@ import SwiftUI
 import ManagedSettings
 import FamilyControls
 
+@MainActor
 class AppBlocker: ObservableObject {
     let store = ManagedSettingsStore()
     @Published var isBlocking = false
@@ -23,14 +24,10 @@ class AppBlocker: ObservableObject {
     func requestAuthorization() async {
         do {
             try await AuthorizationCenter.shared.requestAuthorization(for: .individual)
-            DispatchQueue.main.async {
-                self.isAuthorized = true
-            }
+            self.isAuthorized = true
         } catch {
             print("Failed to request authorization: \(error)")
-            DispatchQueue.main.async {
-                self.isAuthorized = false
-            }
+            self.isAuthorized = false
         }
     }
     

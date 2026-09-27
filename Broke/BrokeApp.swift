@@ -14,7 +14,7 @@ struct BrokeApp: App {
     
     var body: some Scene {
         WindowGroup {
-            BrokerView()
+            BlockerView()
                 .environmentObject(appBlocker)
                 .environmentObject(profileManager)
                 .onOpenURL { url in

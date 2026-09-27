@@ -9,7 +9,7 @@ import CoreNFC
 import FamilyControls
 import ManagedSettings
 
-struct BrokerView: View {
+struct BlockerView: View {
     @EnvironmentObject private var appBlocker: AppBlocker
     @EnvironmentObject private var profileManager: ProfileManager
     @StateObject private var nfcReader = NFCReader()
