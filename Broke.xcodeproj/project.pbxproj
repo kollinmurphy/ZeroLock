@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB4F2A5E2E5A81C000773EB3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB4F2A5D2E5A81C000773EB3 /* LaunchScreen.storyboard */; };
 		F51C38D22C775953003B4EB3 /* CoreNFC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51C38D02C77594E003B4EB3 /* CoreNFC.framework */; };
 		F51C38D72C775CAF003B4EB3 /* AppBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51C38D62C775CAF003B4EB3 /* AppBlocker.swift */; };
 		F51C38D92C775CEC003B4EB3 /* NfcReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F51C38D82C775CEC003B4EB3 /* NfcReader.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB4F2A5D2E5A81C000773EB3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F51C38D02C77594E003B4EB3 /* CoreNFC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreNFC.framework; path = System/Library/Frameworks/CoreNFC.framework; sourceTree = SDKROOT; };
 		F51C38D52C775AAF003B4EB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F51C38D62C775CAF003B4EB3 /* AppBlocker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBlocker.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				F5A3B0622C733E3500BD6C7F /* Assets.xcassets */,
 				F5A3B0642C733E3500BD6C7F /* Preview Content */,
 				F51C38E92C78B47A003B4EB3 /* ProfileFormView.swift */,
+				BB4F2A5D2E5A81C000773EB3 /* LaunchScreen.storyboard */,
 			);
 			path = Broke;
 			sourceTree = "<group>";
@@ -160,6 +163,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB4F2A5E2E5A81C000773EB3 /* LaunchScreen.storyboard in Resources */,
 				F5A3B0662C733E3500BD6C7F /* Preview Assets.xcassets in Resources */,
 				F5A3B0632C733E3500BD6C7F /* Assets.xcassets in Resources */,
 			);
@@ -308,7 +312,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Broke/Broke.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Broke/Preview Content\"";
 				DEVELOPMENT_TEAM = 7CS3M8LM96;
 				ENABLE_PREVIEWS = YES;
@@ -316,7 +320,7 @@
 				INFOPLIST_FILE = Broke/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ZeroLock;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC tag to read NDEF messages into the application";
+				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC tag to read and write ZeroLock tags";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -324,7 +328,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -349,7 +353,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Broke/Broke.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Broke/Preview Content\"";
 				DEVELOPMENT_TEAM = 7CS3M8LM96;
 				ENABLE_PREVIEWS = YES;
@@ -357,7 +361,7 @@
 				INFOPLIST_FILE = Broke/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ZeroLock;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC tag to read NDEF messages into the application";
+				INFOPLIST_KEY_NFCReaderUsageDescription = "NFC tag to read and write ZeroLock tags";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -365,7 +369,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

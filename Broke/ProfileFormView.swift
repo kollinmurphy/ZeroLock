@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SFSymbolsPicker
 import FamilyControls
 
 struct ProfileFormView: View {

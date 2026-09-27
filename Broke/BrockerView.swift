@@ -6,7 +6,6 @@
 //
 import SwiftUI
 import CoreNFC
-import SFSymbolsPicker
 import FamilyControls
 import ManagedSettings
 
@@ -95,7 +94,7 @@ struct BrokerView: View {
     private func scanTag() {
         nfcReader.scan { payload in
             if payload == tagPhrase {
-                NSLog("Toggling block")
+                NSLog("Toggling block. Tag: \(payload)")
                 appBlocker.toggleBlocking(for: profileManager.currentProfile)
             } else {
                 showWrongTagAlert = true
