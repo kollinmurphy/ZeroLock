@@ -1,9 +1,10 @@
 //
-//  BrockerView.swift
+//  BlockerView.swift
 //  Broke
 //
 //  Created by Oz Tamir on 22/08/2024.
 //
+
 import SwiftUI
 import CoreNFC
 import FamilyControls
@@ -13,11 +14,12 @@ struct BlockerView: View {
     @EnvironmentObject private var appBlocker: AppBlocker
     @EnvironmentObject private var profileManager: ProfileManager
     @StateObject private var nfcReader = NFCReader()
-    private let tagPhrase = "zerolock://zerolock"
+    private let tagPhrase = AppConstants.tagPhrase
     
     @State private var showWrongTagAlert = false
     @State private var showCreateTagAlert = false
     @State private var nfcWriteSuccess = false
+    @State private var showHelpSheet = false
     
     private var isBlocking : Bool {
         get {
@@ -43,24 +45,27 @@ struct BlockerView: View {
                     .background(isBlocking ? Color("BlockingBackground") : Color("NonBlockingBackground"))
                 }
             }
-            .navigationBarItems(trailing: createTagButton)
+            .navigationBarItems(leading: helpButton, trailing: createTagButton)
+            .sheet(isPresented: $showHelpSheet) {
+                HelpView()
+            }
             .alert(isPresented: $showWrongTagAlert) {
                 Alert(
-                    title: Text("Not a ZeroLock Tag"),
-                    message: Text("You can create a new ZeroLock tag using the + button"),
+                    title: Text("Not a \(AppConstants.appName) Tag"),
+                    message: Text("You can create a new \(AppConstants.appName) tag using the + button"),
                     dismissButton: .default(Text("OK"))
                 )
             }
-            .alert("Create ZeroLock Tag", isPresented: $showCreateTagAlert) {
-                Button("Create") { createBrokerTag() }
+            .alert("Create \(AppConstants.appName) Tag", isPresented: $showCreateTagAlert) {
+                Button("Create") { createZeroLockTag() }
                 Button("Cancel", role: .cancel) { }
             } message: {
-                Text("Do you want to create a new ZeroLock tag?")
+                Text("Do you want to create a new \(AppConstants.appName) tag?")
             }
             .alert("Tag Creation", isPresented: $nfcWriteSuccess) {
                 Button("OK", role: .cancel) { }
             } message: {
-                Text(nfcWriteSuccess ? "ZeroLock tag created successfully!" : "Failed to create ZeroLock tag. Please try again.")
+                Text(nfcWriteSuccess ? "\(AppConstants.appName) tag created successfully!" : "Failed to create \(AppConstants.appName) tag. Please try again.")
             }
         }
         .animation(.spring(), value: isBlocking)
@@ -103,6 +108,14 @@ struct BlockerView: View {
         }
     }
     
+    private var helpButton: some View {
+        Button(action: {
+            showHelpSheet = true
+        }) {
+            Image(systemName: "questionmark.circle")
+        }
+    }
+    
     private var createTagButton: some View {
         Button(action: {
             showCreateTagAlert = true
@@ -112,7 +125,7 @@ struct BlockerView: View {
         .disabled(!NFCNDEFReaderSession.readingAvailable)
     }
     
-    private func createBrokerTag() {
+    private func createZeroLockTag() {
         nfcReader.write(tagPhrase) { success in
             nfcWriteSuccess = !success
             showCreateTagAlert = false
