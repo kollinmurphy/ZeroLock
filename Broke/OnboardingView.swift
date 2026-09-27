@@ -203,6 +203,29 @@ struct OnboardingView: View {
                         title: "3. Lock & Unlock",
                         description: "Tap the main shield button and scan your NFC tag to switch blocking on or off."
                     )
+
+                    // Safari Website Blocking Tip Callout
+                    HStack(alignment: .top, spacing: 12) {
+                        Image(systemName: "safari.fill")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.blue)
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Website Blocking Tip")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.primary)
+
+                            Text("Only Safari supports blocking individual websites. Chrome and other third-party browsers do not.")
+                                .font(.footnote)
+                                .foregroundColor(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .padding(12)
+                    .background(Color.blue.opacity(0.08))
+                    .cornerRadius(12)
+                    .padding(.top, 4)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal)

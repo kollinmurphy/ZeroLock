@@ -193,28 +193,36 @@ struct ProfileFormView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 
-                // Separate Metric Chips Row
-                HStack(spacing: 8) {
-                    metricChip(
-                        icon: "app.badge",
-                        count: activitySelection.applicationTokens.count,
-                        label: activitySelection.applicationTokens.count == 1 ? "App" : "Apps",
-                        color: .blue
-                    )
-                    
-                    metricChip(
-                        icon: "square.stack.3d.up.fill",
-                        count: activitySelection.categoryTokens.count,
-                        label: activitySelection.categoryTokens.count == 1 ? "Category" : "Categories",
-                        color: .purple
-                    )
-                    
-                    metricChip(
-                        icon: "safari",
-                        count: activitySelection.webDomainTokens.count,
-                        label: activitySelection.webDomainTokens.count == 1 ? "Site" : "Sites",
-                        color: .teal
-                    )
+                // Separate Metric Chips Row (shown only if items are selected)
+                if hasSelectedActivities {
+                    HStack(spacing: 8) {
+                        if activitySelection.applicationTokens.count > 0 {
+                            metricChip(
+                                icon: "app.badge",
+                                count: activitySelection.applicationTokens.count,
+                                label: activitySelection.applicationTokens.count == 1 ? "App" : "Apps",
+                                color: .blue
+                            )
+                        }
+                        
+                        if activitySelection.categoryTokens.count > 0 {
+                            metricChip(
+                                icon: "square.stack.3d.up.fill",
+                                count: activitySelection.categoryTokens.count,
+                                label: activitySelection.categoryTokens.count == 1 ? "Category" : "Categories",
+                                color: .purple
+                            )
+                        }
+                        
+                        if activitySelection.webDomainTokens.count > 0 {
+                            metricChip(
+                                icon: "safari",
+                                count: activitySelection.webDomainTokens.count,
+                                label: activitySelection.webDomainTokens.count == 1 ? "Site" : "Sites",
+                                color: .teal
+                            )
+                        }
+                    }
                 }
             }
             .padding(14)
@@ -224,6 +232,12 @@ struct ProfileFormView: View {
                     .shadow(color: Color.black.opacity(0.03), radius: 8, x: 0, y: 2)
             )
         }
+    }
+    
+    private var hasSelectedActivities: Bool {
+        !activitySelection.applicationTokens.isEmpty ||
+        !activitySelection.categoryTokens.isEmpty ||
+        !activitySelection.webDomainTokens.isEmpty
     }
     
     // Custom Metric Chip Component

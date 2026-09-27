@@ -128,7 +128,9 @@ struct ProfileCardView: View {
                 
                 // Metric Badges
                 HStack(spacing: 6) {
-                    badgePill(icon: "app.badge", count: profile.appTokens.count, label: "apps")
+                    if !profile.appTokens.isEmpty {
+                        badgePill(icon: "app.badge", count: profile.appTokens.count, label: "apps")
+                    }
                     if !profile.categoryTokens.isEmpty {
                         badgePill(icon: "square.stack.3d.up.fill", count: profile.categoryTokens.count, label: "cats")
                     }
